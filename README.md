@@ -38,7 +38,7 @@ You need **Python 3.11+** and either a running **MariaDB** server or
 `DJANGO_USE_SQLITE=1` in `.env`.
 
 ```bash
-git clone REPO_URL
+git clone https://github.com/Json-UU/newsroom.git
 cd newsroom
 python -m venv .venv
 .venv\Scriptsctivate            # macOS/Linux: source .venv/bin/activate
@@ -83,7 +83,7 @@ SQLite in development mode by default, so it works without MariaDB or a `.env`
 file.
 
 ```bash
-git clone REPO_URL
+git clone https://github.com/Json-UU/newsroom.git
 cd newsroom
 docker build -t newsroom .
 docker run --rm -p 8000:8000 newsroom
