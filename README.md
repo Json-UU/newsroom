@@ -1,24 +1,126 @@
 # The Newsroom
 
-A Django capstone with independent/publisher journalism, editorial approval,
-reader subscriptions, curated newsletters and a token-authenticated REST API.
+A Django news platform with independent and publisher journalism, editorial
+approval, reader subscriptions, curated newsletters and a token-authenticated
+REST API.
 
-## Quick start (Windows)
+- **Run it with a virtual environment** or **with Docker** (below).
+- **Documentation:** open [`docs/_build/html/index.html`](docs/_build/html/index.html)
+  in a browser for the Sphinx user guide and code reference.
 
-You need **Python 3.11+** and a running **MariaDB** server. MariaDB is the
-database the brief requires.
+## Configuration and secrets
 
-1. Double-click **`start.bat`**. On the first run it creates a `.env` file and
-   opens it in Notepad.
-2. Set `MARIADB_PASSWORD` to your MariaDB root password, save, and close.
-3. Double-click **`start.bat`** again. It installs the requirements, creates
-   the `newsroom` database, sets up the tables, loads demo content and starts
-   the server.
-4. Open <http://127.0.0.1:8000/>. Keep the window open; press Ctrl+C to stop.
+Settings are read from environment variables, or from a `.env` file in this
+folder. `.env` is listed in `.gitignore`, so **no passwords or keys are stored in
+this repository**. Create your own copy from the template:
 
-Next time, just double-click `start.bat`.
+```bash
+cp .env.example .env        # Windows: copy .env.example .env
+```
 
-### Logins
+Then fill in the values you need:
+
+| Variable | What it is | How to get it |
+| --- | --- | --- |
+| `MARIADB_PASSWORD` (and `MARIADB_USER`, `MARIADB_HOST`) | Login for your MariaDB server | The password you chose when installing MariaDB ([download](https://mariadb.org/download/)) |
+| `DJANGO_USE_SQLITE=1` | Use SQLite instead of MariaDB | Nothing to obtain; useful if you do not have MariaDB |
+| `DJANGO_SECRET_KEY` | Django signing key; required when `DJANGO_DEBUG=0` | Generate one: `python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"` |
+| `APPROVAL_API_KEY` | Shared key for the internal approval API; required when `DJANGO_DEBUG=0` | Any long random string, e.g. `python -c "import secrets; print(secrets.token_urlsafe(32))"` |
+| `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | SMTP login for real email (optional) | From your email provider, e.g. a Gmail app password |
+| `DJANGO_ADMIN_PASSWORD`, `NEWSROOM_DEMO_PASSWORD` | Override the demo passwords (optional) | Choose your own |
+
+In development (`DJANGO_DEBUG=1`, the default) the secret key and approval key
+fall back to local-only values, so only the database settings are needed.
+
+## Run with a virtual environment
+
+You need **Python 3.11+** and either a running **MariaDB** server or
+`DJANGO_USE_SQLITE=1` in `.env`.
+
+```bash
+git clone REPO_URL
+cd newsroom
+python -m venv .venv
+.venv\Scriptsctivate            # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env              # Windows: copy .env.example .env
+```
+
+Edit `.env` (see [Configuration and secrets](#configuration-and-secrets)), then:
+
+```bash
+python run.py
+```
+
+`run.py` creates the `newsroom` database if needed, applies migrations, loads
+demo content and starts the server at <http://127.0.0.1:8000/>. Press Ctrl+C to
+stop. The plain Django equivalent is:
+
+```bash
+python manage.py migrate
+python manage.py seed_demo
+python manage.py runserver
+```
+
+On Windows you can instead double-click **`start.bat`**: the first run creates
+`.env` and opens it in Notepad; the second run installs the requirements and
+starts the server.
+
+### Troubleshooting (venv)
+
+- **"Could not connect to the database":** check MariaDB is running and the
+  user and password in `.env` are right. A non-root user needs permission to
+  create databases, or create the `newsroom` database for it yourself.
+- **No MariaDB available:** add `DJANGO_USE_SQLITE=1` to `.env` to run on SQLite
+  instead. This is a fallback only; the submission targets MariaDB.
+- **Portable MariaDB:** set `MARIADB_SERVER` and `MARIADB_CONFIG` in `.env` and
+  `run.py` starts it automatically.
+
+## Run with Docker
+
+You need [Docker](https://docs.docker.com/get-docker/). The image runs on
+SQLite in development mode by default, so it works without MariaDB or a `.env`
+file.
+
+```bash
+git clone REPO_URL
+cd newsroom
+docker build -t newsroom .
+docker run --rm -p 8000:8000 newsroom
+```
+
+Open <http://localhost:8000/> and sign in with the [demo logins](#logins).
+Approval emails are printed in the container's output. Press Ctrl+C to stop;
+the SQLite data is discarded with the container.
+
+**Play with Docker:** sign in at <https://labs.play-with-docker.com>, click
+**Add new instance**, run the four commands above, then click the **8000**
+badge at the top of the page to open the app.
+
+**Using MariaDB instead:** pass your settings at run time (never bake them into
+the image). `host.docker.internal` reaches a MariaDB server on your own machine
+from Docker Desktop:
+
+```bash
+docker run --rm -p 8000:8000 -e DJANGO_USE_SQLITE=0   -e MARIADB_HOST=host.docker.internal -e MARIADB_PASSWORD=your-password   newsroom
+```
+
+The `newsroom` database must already exist on that server
+(`CREATE DATABASE newsroom CHARACTER SET utf8mb4;`).
+
+## Rebuild the documentation
+
+```bash
+pip install -r requirements-dev.txt
+cd docs
+make clean
+make html                         # Windows PowerShell: .\make.bat html
+```
+
+The output goes to `docs/_build/html/` and is committed so readers of the
+repository can open it directly.
+
+## Logins
 
 | Username | Password | Use it to |
 | --- | --- | --- |
@@ -32,30 +134,6 @@ and the demo accounts by `seed_demo`. Both only use these default passwords in
 development (`DJANGO_DEBUG=1`), and never change an existing account's password.
 Change them for any real use, or set `DJANGO_ADMIN_PASSWORD` and
 `NEWSROOM_DEMO_PASSWORD` in `.env` before the first run.
-
-### Manual setup (any OS)
-
-```bash
-python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt   # macOS/Linux: .venv/bin/python
-cp .env.example .env    # then set MARIADB_PASSWORD
-.venv/Scripts/python run.py
-```
-
-`run.py` does the same as steps 3–4. If you prefer plain Django commands, create
-the database yourself (`CREATE DATABASE newsroom CHARACTER SET utf8mb4;`), then
-run `python manage.py migrate`, `python manage.py seed_demo` and
-`python manage.py runserver`.
-
-### Troubleshooting
-
-- **"Could not connect to the database":** check MariaDB is running and the
-  user and password in `.env` are right. A non-root user needs permission to
-  create databases, or create the `newsroom` database for it yourself.
-- **No MariaDB available:** add `DJANGO_USE_SQLITE=1` to `.env` to run on SQLite
-  instead. This is a fallback only; the submission targets MariaDB.
-- **Portable MariaDB:** set `MARIADB_SERVER` and `MARIADB_CONFIG` in `.env` and
-  `run.py` starts it automatically.
 
 Demo stories are loaded as already published, so creating them sends no email.
 To see the approval workflow, approve the draft story as `editor`.
@@ -153,7 +231,7 @@ install the optional development tools once:
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 ```
 
-The included `.vscode/settings.json` selects the project's interpreter and
+Select the `.venv` interpreter in VS Code (**Python: Select Interpreter**).
 `.pylintrc` enables `pylint-django`. This lets Pylint recognise Django's generated
 model members such as `Article.objects`. After configuration changes, use
 **Developer: Reload Window** in VS Code. Runtime dependencies remain in

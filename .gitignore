@@ -138,3 +138,5 @@ GitHub.sublime-settings
 # Project-specific additions
 # Collected static files (python manage.py collectstatic)
 staticfiles/
+# Sphinx build cache (the HTML output in docs/_build/html is committed)
+docs/_build/doctrees/
