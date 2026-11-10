@@ -93,9 +93,9 @@ Open <http://localhost:8000/> and sign in with the [demo logins](#logins).
 Approval emails are printed in the container's output. Press Ctrl+C to stop;
 the SQLite data is discarded with the container.
 
-**Play with Docker:** sign in at <https://labs.play-with-docker.com>, click
-**Add new instance**, run the four commands above, then click the **8000**
-badge at the top of the page to open the app.
+**GitHub Codespaces:** on this repo click **Code > Codespaces > Create
+codespace**, run the last two commands above in its terminal, then open port
+**8000** from the **Ports** tab.
 
 **Using MariaDB instead:** pass your settings at run time (never bake them into
 the image). `host.docker.internal` reaches a MariaDB server on your own machine
