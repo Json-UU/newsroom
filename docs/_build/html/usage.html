@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using The Newsroom &mdash; The Newsroom 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="news package" href="news.html" />
+    <link rel="prev" title="The Newsroom documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            The Newsroom
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using The Newsroom</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#roles">Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#publishing-workflow">Publishing workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rest-api">REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-project">Running the project</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="news.html">news package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">config package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">The Newsroom</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Using The Newsroom</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-the-newsroom">
+<h1>Using The Newsroom<a class="headerlink" href="#using-the-newsroom" title="Link to this heading"></a></h1>
+<section id="roles">
+<h2>Roles<a class="headerlink" href="#roles" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Reader</dt><dd><p>Browses approved articles and newsletters, subscribes to publishers and
+journalists, and sees matching stories under <strong>My feed</strong>.</p>
+</dd>
+<dt>Journalist</dt><dd><p>Writes articles and newsletters in the <strong>Workspace</strong>. An article is
+independent when no publisher is chosen.</p>
+</dd>
+<dt>Editor</dt><dd><p>Reviews drafts in their scope (independent content and content from
+their publishers) and clicks <strong>Approve and publish</strong>.</p>
+</dd>
+<dt>Administrator</dt><dd><p>Manages users, roles and publishers at <code class="docutils literal notranslate"><span class="pre">/admin/</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="publishing-workflow">
+<h2>Publishing workflow<a class="headerlink" href="#publishing-workflow" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>A journalist saves an article for review. Only its author and the
+responsible editors can open the draft.</p></li>
+<li><p>An editor approves it. The article becomes public, subscribers are
+emailed, and the approval is logged to <code class="docutils literal notranslate"><span class="pre">/api/approved/</span></code>
+(see <a class="reference internal" href="news.services.html#news.services.approve_article" title="news.services.approve_article"><code class="xref py py-func docutils literal notranslate"><span class="pre">news.services.approve_article()</span></code></a>).</p></li>
+<li><p>If an email or API call fails, the article stays published and the
+article page offers <strong>Retry notifications</strong>.</p></li>
+<li><p>Editing a published article sends it back for review
+(see <a class="reference internal" href="news.services.html#news.services.save_article_changes" title="news.services.save_article_changes"><code class="xref py py-func docutils literal notranslate"><span class="pre">news.services.save_article_changes()</span></code></a>).</p></li>
+</ol>
+</section>
+<section id="rest-api">
+<h2>REST API<a class="headerlink" href="#rest-api" title="Link to this heading"></a></h2>
+<p>All API endpoints require authentication with a token
+(<code class="docutils literal notranslate"><span class="pre">Authorization:</span> <span class="pre">Token</span> <span class="pre">&lt;key&gt;</span></code>) or a browser session. List responses are
+paginated, 20 items per page. See <a class="reference internal" href="news.api.html#module-news.api" title="news.api"><code class="xref py py-mod docutils literal notranslate"><span class="pre">news.api</span></code></a> for the endpoints and
+<a class="reference internal" href="news.serializers.html#module-news.serializers" title="news.serializers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">news.serializers</span></code></a> for the fields returned.</p>
+</section>
+<section id="running-the-project">
+<h2>Running the project<a class="headerlink" href="#running-the-project" title="Link to this heading"></a></h2>
+<p>Setup steps for a virtual environment and for Docker are in the
+<code class="docutils literal notranslate"><span class="pre">README.md</span></code> file at the root of the repository.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="The Newsroom documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="news.html" class="btn btn-neutral float-right" title="news package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Jason Pretorius.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
