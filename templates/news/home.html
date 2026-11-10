@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="intro">
+  <p class="eyebrow">{% if personal_feed %}CURATED BY YOU{% else %}THE DAILY PERSPECTIVE{% endif %}</p>
+  <h1>{{ heading }}</h1>
+  <p class="lede">Thoughtful reporting from independent journalists and trusted publications.</p>
+  {% if personal_feed %}<a href="{% url 'subscriptions' %}">Manage your subscriptions &rarr;</a>{% else %}
+  <form method="get" class="search"><label for="q">Find a story</label><div><input id="q" name="q" value="{{ query }}" placeholder="Search headlines and stories"><button>Search</button></div></form>
+  {% endif %}
+</section>
+<div class="section-heading"><h2>{% if personal_feed %}From your subscriptions{% elif query %}Search results{% else %}The latest stories{% endif %}</h2><span>{{ page_obj.paginator.count }} stories</span></div>
+<section class="story-grid" aria-label="Articles">
+{% for article in page_obj %}
+  <article class="story-card {% if forloop.first %}lead-story{% endif %}">
+    <p class="eyebrow">{{ article.publisher|default:'Independent' }}</p>
+    <h2><a href="{% url 'article' article.pk %}">{{ article.title }}</a></h2>
+    <p>{{ article.content|truncatewords:34 }}</p>
+    <div class="byline"><strong>{{ article.author.get_full_name|default:article.author.username }}</strong><span>{{ article.created_at|date:'d M Y' }}</span></div>
+    <a class="read-link" href="{% url 'article' article.pk %}">Read story &rarr;</a>
+  </article>
+{% empty %}
+  <div class="empty"><h2>No stories here yet.</h2><p>{% if personal_feed %}Follow publishers or journalists to start building your reading list.{% else %}Try another search or come back when the next story is published.{% endif %}</p></div>
+{% endfor %}
+</section>
+{% include 'news/pagination.html' %}
+{% endblock %}

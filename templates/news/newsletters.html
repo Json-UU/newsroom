@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="intro"><p class="eyebrow">A MOMENT TO CATCH UP</p><h1>Good stories, brought together.</h1><p class="lede">Explore curated reading from our journalists and editors.</p>{% if user.is_authenticated %}{% if user.is_editor or user.role == 'journalist' %}<a class="button" href="{% url 'newsletter-create' %}">Curate a newsletter</a>{% endif %}{% endif %}</section>
+<section class="story-grid">{% for issue in page_obj %}<article class="story-card"><p class="eyebrow">THE READING ROOM</p><h2><a href="{% url 'newsletter' issue.pk %}">{{ issue.title }}</a></h2><p>{{ issue.description|truncatewords:35 }}</p><p class="byline">Curated by {{ issue.author }}</p><a href="{% url 'newsletter' issue.pk %}">Open issue &rarr;</a></article>{% empty %}<p class="empty">The first issue is on its way.</p>{% endfor %}</section>
+{% include 'news/pagination.html' %}
+{% endblock %}

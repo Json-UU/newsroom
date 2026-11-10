@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title }} · The Newsroom{% endblock %}
+{% block content %}
+<article class="article-body">
+  <a href="{% url 'home' %}">&larr; All stories</a>
+  <p class="eyebrow">{{ article.publisher|default:'Independent journalism' }} · {% if article.approved %}Published{% else %}Awaiting approval{% endif %}</p>
+  <h1>{{ article.title }}</h1>
+  <div class="byline"><strong>{{ article.author.get_full_name|default:article.author.username }}</strong><span>{{ article.created_at|date:'d F Y' }}</span></div>
+  {% if manageable %}<div class="actions"><a class="button" href="{% url 'article-edit' article.pk %}">Edit article</a><a class="danger-link" href="{% url 'article-delete' article.pk %}">Delete</a></div>{% endif %}
+  {% if can_approve %}
+    {% if not article.approved or delivery.last_error %}<form method="post" action="{% url 'article-approve' article.pk %}" class="review-box">{% csrf_token %}<p>{% if article.approved %}{{ delivery.last_error }}{% else %}Review this story before it reaches readers. Approval emails subscribers and logs the article through the API.{% endif %}</p><button>{% if article.approved %}Retry notifications{% else %}Approve and publish{% endif %}</button></form>{% endif %}
+  {% endif %}
+  <div class="prose">{{ article.content|linebreaks }}</div>
+</article>
+{% endblock %}

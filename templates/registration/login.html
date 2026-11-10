@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="form-panel"><p class="eyebrow">WELCOME BACK</p><h1>Sign in to your newsroom.</h1><p>Follow your interests. Keep up with the stories that matter.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button>Sign in</button></form>
+<p>New here? <a href="{% url 'register' %}">Create a reader account</a>.</p></section>
+{% endblock %}

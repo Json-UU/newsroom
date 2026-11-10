@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="intro"><p class="eyebrow">THE READING ROOM · {{ issue.publisher|default:'Independent' }}</p><h1>{{ issue.title }}</h1><p class="lede">{{ issue.description }}</p><p>Curated by {{ issue.author }} · {{ issue.created_at|date:'d M Y' }}</p>{% if manageable %}<div class="actions"><a class="button" href="{% url 'newsletter-edit' issue.pk %}">Edit newsletter</a><a class="danger-link" href="{% url 'newsletter-delete' issue.pk %}">Delete</a></div>{% endif %}</section>
+{% if manageable %}<form method="post" action="{% url 'newsletter-send' issue.pk %}">{% csrf_token %}<button>Email this issue to subscribers</button><p class="helptext">Each click sends a new copy to current subscribers.</p></form>{% endif %}
+<section class="story-grid">{% for article in articles %}<article class="story-card"><p class="eyebrow">{{ article.publisher|default:'Independent' }}</p><h2><a href="{% url 'article' article.pk %}">{{ article.title }}</a></h2><p>{{ article.content|truncatewords:30 }}</p></article>{% empty %}<p class="empty">No approved stories are available in this issue yet.</p>{% endfor %}</section>
+{% endblock %}

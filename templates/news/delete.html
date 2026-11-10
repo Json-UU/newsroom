@@ -1,0 +1,2 @@
+{% extends 'base.html' %}
+{% block content %}<section class="form-panel"><p class="eyebrow">CONFIRM DELETION</p><h1>Delete “{{ item.title }}”?</h1><p>This permanently removes this content.</p><form method="post">{% csrf_token %}<button class="danger">Delete permanently</button> <a href="{% url 'workspace' %}">Cancel</a></form></section>{% endblock %}

@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}The Newsroom{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'news/favicon.svg' %}">
+  <link rel="stylesheet" href="{% static 'news/style.css' %}">
+</head>
+<body>
+  <div class="edition">INDEPENDENT JOURNALISM · A BETTER PERSPECTIVE</div>
+  <header>
+    <a href="{% url 'home' %}" class="brand">The Newsroom<span class="brand-dot">.</span></a>
+    <nav aria-label="Main navigation">
+      <a href="{% url 'home' %}">Latest</a>
+      <a href="{% url 'newsletters' %}">Newsletters</a>
+      {% if user.is_authenticated %}
+        {% if user.is_editor or user.role == 'journalist' %}
+          <a href="{% url 'workspace' %}">Workspace</a>
+        {% elif user.role == 'reader' %}
+          <a href="{% url 'feed' %}">My feed</a>
+          <a href="{% url 'subscriptions' %}">Subscriptions</a>
+        {% endif %}
+        <span class="account">{{ user.username }} · {{ user.get_role_display }}</span>
+        <form method="post" action="{% url 'logout' %}" class="inline">{% csrf_token %}<button class="text-button">Sign out</button></form>
+      {% else %}
+        <a href="{% url 'login' %}">Sign in</a>
+        <a class="button small" href="{% url 'register' %}">Become a reader</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main id="main">
+    {% for message in messages %}<div role="status" class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer><strong>The Newsroom.</strong><span>Stories worth your attention. Voices worth following.</span><a href="{% url 'api-root' %}">Developer API</a></footer>
+</body>
+</html>

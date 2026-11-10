@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="form-panel"><p class="eyebrow">YOUR NEWSROOM</p><h1>{{ heading }}</h1>
+  <form method="post">{% csrf_token %}{{ form.as_p }}<button>{{ button }}</button></form>
+</section>
+{% endblock %}

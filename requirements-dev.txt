@@ -1,0 +1,2 @@
+-r requirements.txt
+pylint-django==2.8.0

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="intro"><p class="eyebrow">BEHIND THE HEADLINES</p><h1>Your editorial workspace.</h1><p class="lede">Write, review and bring the next story to your readers.</p><div class="actions">{% if user.role == 'journalist' %}<a class="button" href="{% url 'article-create' %}">Write an article</a>{% endif %}<a class="button secondary" href="{% url 'newsletter-create' %}">Curate a newsletter</a></div></section>
+<div class="section-heading"><h2>{% if user.is_editor %}Editorial review{% else %}Your articles{% endif %}</h2></div>
+<div class="workspace-list">{% for article in page_obj %}<article><div><span class="badge {% if article.approved %}published{% endif %}">{% if article.approved %}Published{% else %}Awaiting review{% endif %}</span><h2><a href="{% url 'article' article.pk %}">{{ article.title }}</a></h2><p>{{ article.author }} · {{ article.publisher|default:'Independent' }}</p></div><a href="{% url 'article' article.pk %}">Open &rarr;</a></article>{% empty %}<p class="empty">No articles in your workspace yet.</p>{% endfor %}</div>
+{% include 'news/pagination.html' %}
+{% endblock %}
