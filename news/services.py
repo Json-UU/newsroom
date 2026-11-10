@@ -25,8 +25,18 @@ logger = logging.getLogger(__name__)
 def approve_article(article_id, editor):
     """Approve an article and schedule notifications after commit.
 
-    Raises ``PermissionDenied`` unless ``editor`` is an editor who
-    oversees the article and did not write it.
+    The article row is locked while it is approved, and the subscriber
+    email and API log are only sent once the transaction commits.
+
+    :param article_id: Primary key of the article to approve.
+    :type article_id: int
+    :param editor: The user approving the article.
+    :type editor: news.models.User
+    :returns: The approved article.
+    :rtype: news.models.Article
+    :raises django.core.exceptions.PermissionDenied: If ``editor`` is not
+        an editor who oversees the article, or wrote it themselves.
+    :raises news.models.Article.DoesNotExist: If no article has that id.
     """
     with transaction.atomic():
         # Lock the row so a simultaneous edit cannot slip in mid-approval.
@@ -55,6 +65,11 @@ def dispatch_approval(delivery_id):
     Each channel is attempted only if it has not already succeeded.
     Failures are logged and stored on the delivery so an editor can retry
     from the article page; they never undo the approval itself.
+
+    :param delivery_id: Primary key of the
+        :class:`~news.models.ApprovalDelivery` to process.
+    :type delivery_id: int
+    :returns: ``None``. The outcome is saved on the delivery record.
     """
     # A short atomic lease prevents concurrent retries without holding a DB
     # transaction open while the HTTP endpoint writes to this same database.
@@ -130,7 +145,16 @@ def save_article_changes(article, changes):
 
     If any field actually changes, the article is unapproved and its
     revision is incremented, so it disappears from public pages until an
-    editor approves it again. Returns the saved article.
+    editor approves it again.
+
+    :param article: The article being edited.
+    :type article: news.models.Article
+    :param changes: New values keyed by model field name.
+    :type changes: dict[str, object]
+    :returns: The saved (and possibly unapproved) article.
+    :rtype: news.models.Article
+    :raises django.core.exceptions.ValidationError: If the changes break
+        the article's author/publisher rules.
     """
     with transaction.atomic():
         # Lock the row so the edit cannot race with an approval.
@@ -152,9 +176,15 @@ def save_article_changes(article, changes):
 def send_newsletter(issue, user):
     """Email a curated issue, excluding stories returned to draft.
 
-    Raises ``PermissionDenied`` if ``user`` cannot manage the issue and
-    ``ValueError`` if it has no approved stories. Returns the number of
-    recipients.
+    :param issue: The newsletter issue to send.
+    :type issue: news.models.Newsletter
+    :param user: The user sending the issue.
+    :type user: news.models.User
+    :returns: The number of subscribers the issue was sent to.
+    :rtype: int
+    :raises django.core.exceptions.PermissionDenied: If ``user`` cannot
+        manage the issue.
+    :raises ValueError: If the issue has no approved stories.
     """
     if not can_manage(user, issue):
         raise PermissionDenied("You cannot send this newsletter.")
