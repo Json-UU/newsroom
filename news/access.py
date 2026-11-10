@@ -13,6 +13,12 @@ def editorial_scope(user):
 
     Editors oversee all independent content plus the content of any
     publisher they edit for.
+
+    :param user: The editor whose scope is being built.
+    :type user: news.models.User
+    :returns: A filter matching independent content and content from the
+        editor's publishers.
+    :rtype: django.db.models.Q
     """
     return Q(publisher__isnull=True) | Q(publisher__editors=user)
 
@@ -22,6 +28,11 @@ def visible_articles(user):
 
     Everyone sees approved articles. Authors also see their own drafts,
     and editors see drafts within their editorial scope.
+
+    :param user: The current user, who may be anonymous.
+    :type user: news.models.User or django.contrib.auth.models.AnonymousUser
+    :returns: The articles the user is allowed to view.
+    :rtype: django.db.models.QuerySet[news.models.Article]
     """
     articles = Article.objects.select_related("author", "publisher")
     if not user.is_authenticated:
@@ -38,6 +49,13 @@ def can_manage(user, item):
 
     Editors manage independent items and items from their publishers.
     Journalists manage only items they wrote. Readers manage nothing.
+
+    :param user: The current user, who may be anonymous.
+    :type user: news.models.User or django.contrib.auth.models.AnonymousUser
+    :param item: The article or newsletter being checked.
+    :type item: news.models.Article or news.models.Newsletter
+    :returns: ``True`` if the user may edit or delete the item.
+    :rtype: bool
     """
     if not user.is_authenticated:
         return False
@@ -52,6 +70,11 @@ def subscribed_articles(user):
 
     An article matches if its publisher or its journalist is followed;
     distinct() stops an article matching both from appearing twice.
+
+    :param user: The reader whose subscriptions are used.
+    :type user: news.models.User
+    :returns: Approved articles from followed publishers and journalists.
+    :rtype: django.db.models.QuerySet[news.models.Article]
     """
     return Article.objects.filter(approved=True).filter(
         Q(publisher__in=user.publisher_subscriptions.all())
