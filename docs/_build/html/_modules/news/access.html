@@ -1,0 +1,200 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>news.access &mdash; The Newsroom 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            The Newsroom
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Using The Newsroom</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">news package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">config package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Newsroom</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">news.access</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for news.access</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Shared object-level access rules for the HTML views and the API.</span>
+
+<span class="sd">Keeping these rules in one module means the website and the REST API</span>
+<span class="sd">always agree on who can see or change a piece of content.</span>
+<span class="sd">"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Article</span><span class="p">,</span> <span class="n">User</span>
+
+
+<div class="viewcode-block" id="editorial_scope">
+<a class="viewcode-back" href="../../news.access.html#news.access.editorial_scope">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">editorial_scope</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a filter for the content an editor is responsible for.</span>
+
+<span class="sd">    Editors oversee all independent content plus the content of any</span>
+<span class="sd">    publisher they edit for.</span>
+
+<span class="sd">    :param user: The editor whose scope is being built.</span>
+<span class="sd">    :type user: news.models.User</span>
+<span class="sd">    :returns: A filter matching independent content and content from the</span>
+<span class="sd">        editor's publishers.</span>
+<span class="sd">    :rtype: django.db.models.Q</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">Q</span><span class="p">(</span><span class="n">publisher__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">publisher__editors</span><span class="o">=</span><span class="n">user</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="visible_articles">
+<a class="viewcode-back" href="../../news.access.html#news.access.visible_articles">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">visible_articles</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the articles ``user`` may open.</span>
+
+<span class="sd">    Everyone sees approved articles. Authors also see their own drafts,</span>
+<span class="sd">    and editors see drafts within their editorial scope.</span>
+
+<span class="sd">    :param user: The current user, who may be anonymous.</span>
+<span class="sd">    :type user: news.models.User or django.contrib.auth.models.AnonymousUser</span>
+<span class="sd">    :returns: The articles the user is allowed to view.</span>
+<span class="sd">    :rtype: django.db.models.QuerySet[news.models.Article]</span>
+<span class="sd">    """</span>
+    <span class="n">articles</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"author"</span><span class="p">,</span> <span class="s2">"publisher"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">articles</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">visibility</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_editor</span><span class="p">:</span>
+        <span class="n">visibility</span> <span class="o">|=</span> <span class="n">editorial_scope</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="c1"># distinct() removes duplicate rows from the publisher/editor join.</span>
+    <span class="k">return</span> <span class="n">articles</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">visibility</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="can_manage">
+<a class="viewcode-back" href="../../news.access.html#news.access.can_manage">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">can_manage</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return True if ``user`` may edit or delete an article/newsletter.</span>
+
+<span class="sd">    Editors manage independent items and items from their publishers.</span>
+<span class="sd">    Journalists manage only items they wrote. Readers manage nothing.</span>
+
+<span class="sd">    :param user: The current user, who may be anonymous.</span>
+<span class="sd">    :type user: news.models.User or django.contrib.auth.models.AnonymousUser</span>
+<span class="sd">    :param item: The article or newsletter being checked.</span>
+<span class="sd">    :type item: news.models.Article or news.models.Newsletter</span>
+<span class="sd">    :returns: ``True`` if the user may edit or delete the item.</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_editor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">publisher_id</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">editors</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">role</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">Role</span><span class="o">.</span><span class="n">JOURNALIST</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">author_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">pk</span></div>
+
+
+
+<div class="viewcode-block" id="subscribed_articles">
+<a class="viewcode-back" href="../../news.access.html#news.access.subscribed_articles">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subscribed_articles</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return approved articles from the reader's subscriptions.</span>
+
+<span class="sd">    An article matches if its publisher or its journalist is followed;</span>
+<span class="sd">    distinct() stops an article matching both from appearing twice.</span>
+
+<span class="sd">    :param user: The reader whose subscriptions are used.</span>
+<span class="sd">    :type user: news.models.User</span>
+<span class="sd">    :returns: Approved articles from followed publishers and journalists.</span>
+<span class="sd">    :rtype: django.db.models.QuerySet[news.models.Article]</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">Q</span><span class="p">(</span><span class="n">publisher__in</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">publisher_subscriptions</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+        <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">author__in</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">journalist_subscriptions</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"author"</span><span class="p">,</span> <span class="s2">"publisher"</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Jason Pretorius.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

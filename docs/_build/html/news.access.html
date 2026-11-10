@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>news.access module &mdash; The Newsroom 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="news.admin module" href="news.admin.html" />
+    <link rel="prev" title="news.management.commands.seed_demo module" href="news.management.commands.seed_demo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            The Newsroom
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Using The Newsroom</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="news.html">news package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="news.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="news.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">news.access module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#news.access.editorial_scope"><code class="docutils literal notranslate"><span class="pre">editorial_scope()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#news.access.visible_articles"><code class="docutils literal notranslate"><span class="pre">visible_articles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#news.access.can_manage"><code class="docutils literal notranslate"><span class="pre">can_manage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#news.access.subscribed_articles"><code class="docutils literal notranslate"><span class="pre">subscribed_articles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="news.admin.html">news.admin module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.api.html">news.api module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.apps.html">news.apps module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.forms.html">news.forms module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.models.html">news.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.serializers.html">news.serializers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.services.html">news.services module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.signals.html">news.signals module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="news.views.html">news.views module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="news.html#module-news">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">config package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">The Newsroom</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="news.html">news package</a></li>
+      <li class="breadcrumb-item active">news.access module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/news.access.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-news.access">
+<span id="news-access-module"></span><h1>news.access module<a class="headerlink" href="#module-news.access" title="Link to this heading"></a></h1>
+<p>Shared object-level access rules for the HTML views and the API.</p>
+<p>Keeping these rules in one module means the website and the REST API
+always agree on who can see or change a piece of content.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="news.access.editorial_scope">
+<span class="sig-prename descclassname"><span class="pre">news.access.</span></span><span class="sig-name descname"><span class="pre">editorial_scope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/news/access.html#editorial_scope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#news.access.editorial_scope" title="Link to this definition"></a></dt>
+<dd><p>Return a filter for the content an editor is responsible for.</p>
+<p>Editors oversee all independent content plus the content of any
+publisher they edit for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="news.models.html#news.models.User" title="news.models.User"><em>news.models.User</em></a>) – The editor whose scope is being built.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A filter matching independent content and content from the
+editor’s publishers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>django.db.models.Q</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="news.access.visible_articles">
+<span class="sig-prename descclassname"><span class="pre">news.access.</span></span><span class="sig-name descname"><span class="pre">visible_articles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/news/access.html#visible_articles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#news.access.visible_articles" title="Link to this definition"></a></dt>
+<dd><p>Return the articles <code class="docutils literal notranslate"><span class="pre">user</span></code> may open.</p>
+<p>Everyone sees approved articles. Authors also see their own drafts,
+and editors see drafts within their editorial scope.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="news.models.html#news.models.User" title="news.models.User"><em>news.models.User</em></a><em> or </em><em>django.contrib.auth.models.AnonymousUser</em>) – The current user, who may be anonymous.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The articles the user is allowed to view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>django.db.models.QuerySet[<a class="reference internal" href="news.models.html#news.models.Article" title="news.models.Article">news.models.Article</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="news.access.can_manage">
+<span class="sig-prename descclassname"><span class="pre">news.access.</span></span><span class="sig-name descname"><span class="pre">can_manage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/news/access.html#can_manage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#news.access.can_manage" title="Link to this definition"></a></dt>
+<dd><p>Return True if <code class="docutils literal notranslate"><span class="pre">user</span></code> may edit or delete an article/newsletter.</p>
+<p>Editors manage independent items and items from their publishers.
+Journalists manage only items they wrote. Readers manage nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> (<a class="reference internal" href="news.models.html#news.models.User" title="news.models.User"><em>news.models.User</em></a><em> or </em><em>django.contrib.auth.models.AnonymousUser</em>) – The current user, who may be anonymous.</p></li>
+<li><p><strong>item</strong> (<a class="reference internal" href="news.models.html#news.models.Article" title="news.models.Article"><em>news.models.Article</em></a><em> or </em><a class="reference internal" href="news.models.html#news.models.Newsletter" title="news.models.Newsletter"><em>news.models.Newsletter</em></a>) – The article or newsletter being checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the user may edit or delete the item.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="news.access.subscribed_articles">
+<span class="sig-prename descclassname"><span class="pre">news.access.</span></span><span class="sig-name descname"><span class="pre">subscribed_articles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/news/access.html#subscribed_articles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#news.access.subscribed_articles" title="Link to this definition"></a></dt>
+<dd><p>Return approved articles from the reader’s subscriptions.</p>
+<p>An article matches if its publisher or its journalist is followed;
+distinct() stops an article matching both from appearing twice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> (<a class="reference internal" href="news.models.html#news.models.User" title="news.models.User"><em>news.models.User</em></a>) – The reader whose subscriptions are used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Approved articles from followed publishers and journalists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>django.db.models.QuerySet[<a class="reference internal" href="news.models.html#news.models.Article" title="news.models.Article">news.models.Article</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="news.management.commands.seed_demo.html" class="btn btn-neutral float-left" title="news.management.commands.seed_demo module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="news.admin.html" class="btn btn-neutral float-right" title="news.admin module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Jason Pretorius.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
